@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Row, Col } from 'antd';
 import ImageCard from '../components/cards/image-card.component';
 import WheelPlusIcon from '../components/icons/wheelplus.icon';
@@ -17,7 +18,7 @@ class HomeContainer extends Component {
             <React.Fragment>
                 <Row gutter={15} type="flex" justify="center">       
                     <Col>
-                        <ImageCard image={<img alt="Job List" src="/images/icon-work-programs-03.png" />} title="My Jobs" desc="Manage your jobs" />
+                        <ImageCard onClick={() => this.props.history.push('/joblist')} image={<img alt="Job List" src="/images/icon-work-programs-03.png" />} title="My Jobs" desc="Manage your jobs" />
                     </Col>      
                     <Col>
                         <ImageCard image={<WheelPlusIcon />} title="Create Job" desc="Create new jobs" />
@@ -28,4 +29,4 @@ class HomeContainer extends Component {
     }
 }
 
-export default HomeContainer;
+export default withRouter(HomeContainer);
