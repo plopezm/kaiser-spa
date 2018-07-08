@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import HomeContainer from '../containers/home.container';
-import JobListContainer from '../containers/joblist-container/jobslist.container';
+import JobListContainer from '../containers/joblist-container/joblist.container';
 
 const AppRouter = () => {
     return (        
