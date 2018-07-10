@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './joblist.container.css';
-import { Table, Input, Icon } from 'antd';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+import { Table, Input, Icon, Spin, Alert } from 'antd';
 
 const mockedData = [{
         key: 0,
@@ -12,6 +14,19 @@ const mockedData = [{
         status: 'STOPPED'
     }
 ];
+
+const GET_JOBS = gql`
+    query jobQuery {
+        jobs {
+            version
+            name
+            status
+            hash
+            duration
+            entrypoint
+        }
+    }
+`;
 
 class JobListContainer extends Component {
     
@@ -75,7 +90,6 @@ class JobListContainer extends Component {
           {
             title: 'Name',
             dataIndex: 'name',
-            key: 'name',
             filterDropdown: (
                 <div className="JobListContainer-filter-dropdown">
                   <Input
@@ -97,7 +111,6 @@ class JobListContainer extends Component {
           }, {
             title: 'Status',
             dataIndex: 'status',
-            key: 'status',
             filters: [
                 { text: 'RUNNING', value: 'RUNNING' },
                 { text: 'PAUSED', value: 'PAUSED' },
@@ -118,7 +131,23 @@ class JobListContainer extends Component {
         ];
 
         return (
-            <Table dataSource={this.state.data} columns={columns} onChange={this.handleChange}/>
+            <Query query={GET_JOBS}>
+                {({ loading, error, data }) => {
+                    if (loading) return (                        
+                        <Spin tip="Loading...">
+                            <Alert
+                                message="Retrieving data"
+                                description="Contacting with the server..."
+                                type="info"
+                            />
+                        </Spin>
+                    );
+                    if (error) return `Error! ${error.message}`;
+                    return (
+                        <Table rowKey="name" dataSource={data.jobs} columns={columns} onChange={this.handleChange}/>
+                    )
+                }}
+            </Query>
         )
     }
 }
