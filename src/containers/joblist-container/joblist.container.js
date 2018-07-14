@@ -4,17 +4,6 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Table, Input, Icon, Spin, Alert } from 'antd';
 
-const mockedData = [{
-        key: 0,
-        name: 'Job1',
-        status: 'RUNNING'
-    },{
-        key: 1,
-        name: 'Job2',
-        status: 'STOPPED'
-    }
-];
-
 const GET_JOBS = gql`
     query jobQuery {
         jobs {
@@ -38,7 +27,7 @@ class JobListContainer extends Component {
             searchText: '',
             filterDropdownVisible: false,
             filtered: false,
-            data: mockedData
+            data: []
         }
     }
 
@@ -61,7 +50,7 @@ class JobListContainer extends Component {
         this.setState({
           filterDropdownVisible: false,
           filtered: !!searchText,
-          data: mockedData.map((record) => {
+          data: this.state.data.map((record) => {
             const match = record.name.match(reg);
             if (!match) {
               return null;
@@ -131,7 +120,7 @@ class JobListContainer extends Component {
         ];
 
         return (
-            <Query query={GET_JOBS}>
+            <Query query={GET_JOBS} pollInterval={500}>
                 {({ loading, error, data }) => {
                     if (loading) return (                        
                         <Spin tip="Loading...">
@@ -143,13 +132,23 @@ class JobListContainer extends Component {
                         </Spin>
                     );
                     if (error) return `Error! ${error.message}`;
+                    const allJobs = [...data.jobs];
                     return (
-                        <Table rowKey="name" dataSource={data.jobs} columns={columns} onChange={this.handleChange}/>
+                        <Table rowKey="name" dataSource={allJobs.sort(compareJobs)} columns={columns} onChange={this.handleChange}/>
                     )
                 }}
             </Query>
         )
     }
+}
+
+function compareJobs(a, b) {
+    if (a.name > b.name) {
+        return 1;
+    } else if (a.name < b.name) {
+        return -1;
+    }
+    return 0;
 }
 
 export default JobListContainer;
