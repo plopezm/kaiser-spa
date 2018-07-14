@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './joblist.container.css';
+import { Link } from 'react-router-dom';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Table, Input, Icon, Spin, Alert } from 'antd';
+import { Table, Input, Icon, Spin, Alert, Menu, Dropdown } from 'antd';
 
 const GET_JOBS = gql`
     query jobQuery {
@@ -69,11 +70,22 @@ class JobListContainer extends Component {
           }).filter(record => !!record),
         });
       }
+
+    generateMenu = (record) => {
+        return (
+            <Menu>
+                <Menu.Item key="0">
+                    <Link to={`/jobs/${record.name}`}><Icon type="eye" /> Show details</Link>
+                </Menu.Item>
+            </Menu>
+        ); 
+    }
     
     render() {
         let { sortedInfo, filteredInfo } = this.state;
         sortedInfo = sortedInfo || {};
         filteredInfo = filteredInfo || {};
+
 
         const columns = [
           {
@@ -133,8 +145,16 @@ class JobListContainer extends Component {
           {
               title: 'Actions',
               fixed: 'right',
-              width: 100,
-              render: () => <a href="javascript:;">action</a>
+              width: 90,
+              render: (text, record, index) => {
+                return  (
+                    <Dropdown overlay={this.generateMenu(record)} trigger={['click']}>
+                        <a className="ant-btn" href="#">
+                            <Icon type="bars" />
+                        </a>
+                    </Dropdown>
+                )
+              }
           }
         ];
 

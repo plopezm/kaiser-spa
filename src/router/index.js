@@ -7,7 +7,7 @@ const AppRouter = () => {
     return (        
         <Switch>
             <Route exact path="/" component={HomeContainer} />
-            <Route exact path="/joblist" component={JobListContainer} />
+            <Route exact path="/jobs" component={JobListContainer} />
         </Switch>        
     );
 }
