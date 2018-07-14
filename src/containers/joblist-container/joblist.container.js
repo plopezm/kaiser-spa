@@ -97,6 +97,7 @@ class JobListContainer extends Component {
                   filterDropdownVisible: visible,
                 }, () => this.searchInput && this.searchInput.focus());
               },
+              fixed: 'left'
           }, {
             title: 'Status',
             dataIndex: 'status',
@@ -116,11 +117,29 @@ class JobListContainer extends Component {
                 return 0;
             },
             sortOrder: sortedInfo.columnKey === 'status' && sortedInfo.order
+          },
+          {
+            title: 'Entrypoint',
+            dataIndex: 'entrypoint'
+          },
+          {
+              title: 'Duration',
+              dataIndex: 'duration'
+          },
+          {
+            title: 'Hash',
+            dataIndex: 'hash'
+          },
+          {
+              title: 'Actions',
+              fixed: 'right',
+              width: 100,
+              render: () => <a href="javascript:;">action</a>
           }
         ];
 
         return (
-            <Query query={GET_JOBS} pollInterval={500}>
+            <Query query={GET_JOBS} pollInterval={3000}>
                 {({ loading, error, data }) => {
                     if (loading) return (                        
                         <Spin tip="Loading...">
@@ -134,7 +153,7 @@ class JobListContainer extends Component {
                     if (error) return `Error! ${error.message}`;
                     const allJobs = [...data.jobs];
                     return (
-                        <Table rowKey="name" dataSource={allJobs.sort(compareJobs)} columns={columns} onChange={this.handleChange}/>
+                        <Table rowKey="name" dataSource={allJobs.sort(compareJobs)} columns={columns} onChange={this.handleChange} scroll={{x: true}}/>
                     )
                 }}
             </Query>

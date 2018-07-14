@@ -10,3 +10,7 @@ body {
 #root {
   height: 100%;
 }
+
+.ant-table td {
+  white-space: nowrap;
+}
