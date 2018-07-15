@@ -5,9 +5,6 @@ const TreeNode = Tree.TreeNode;
 
 const TaskTreeComponent = (props) => {
     const entrypoint = props.entrypoint;
-    if (!entrypoint || entrypoint === "") {
-        return "";
-    }
     const taskMap = props.tasks.toHashMap('name');
 
     const onSelect = (selectedKeys, info) => {
@@ -20,7 +17,7 @@ const TaskTreeComponent = (props) => {
         }
         const nextTaskName = currentTask[nodeName];
         return (
-                <TreeNode title={nextTaskName} icon={<Icon type={nodeName === 'onSuccess' ? 'check-circle-o' : 'close-circle' } />} >
+                <TreeNode key={nextTaskName} title={nextTaskName} icon={<Icon type={nodeName === 'onSuccess' ? 'check-circle-o' : 'close-circle' } />} >
                     {renderNextNodes(taskMap, taskMap[nextTaskName], 'onSuccess')}
                     {renderNextNodes(taskMap, taskMap[nextTaskName], 'onFailure')}
                 </TreeNode>
@@ -35,9 +32,9 @@ const TaskTreeComponent = (props) => {
                 showLine
                 showIcon
                 defaultExpandAll
-                onSelect={onSelect}
+                onSelect={props.onSelect}
             >
-                <TreeNode title={entrypoint} icon={<Icon type="login" />}>
+                <TreeNode key={entrypoint} title={entrypoint} icon={<Icon type="login" />}>
                     {renderNextNodes(taskMap, initialTask, 'onSuccess')}
                     {renderNextNodes(taskMap, initialTask, 'onFailure')}
                 </TreeNode>
@@ -48,12 +45,12 @@ const TaskTreeComponent = (props) => {
 
 TaskTreeComponent.propTypes = {
     tasks: PropTypes.array.isRequired,
-    entrypoint: PropTypes.string,
-    isRoot: PropTypes.bool
+    entrypoint: PropTypes.string.isRequired,
+    onSelect: PropTypes.func
 }
 
 TaskTreeComponent.defaultProps = {
-    isRoot: false
+    onSelect: () => {}
 }
 
 export default TaskTreeComponent;

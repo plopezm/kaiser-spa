@@ -3,6 +3,8 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Spin, Alert, Input, Button, Icon, Table } from 'antd';
 import TaskTreeComponent from '../components/taskstree.component';
+import {Controlled as CodeMirror} from 'react-codemirror2';
+require('codemirror/mode/javascript/javascript');
 
 const GET_JOB_BY_NAME = gql`
     query getJobById($jobName: String!) {
@@ -25,6 +27,25 @@ const GET_JOB_BY_NAME = gql`
 `;
 
 class JobDetailsContainer extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedTask: null
+        };
+    }
+
+    onTaskSelected = (jobTasks, selectedKeys, info) => {
+        console.log(jobTasks, selectedKeys[0]);
+        jobTasks.forEach(element => {
+            if (element.name === selectedKeys[0]) {
+                this.setState({
+                    selectedTask: element
+                });
+                return;
+            }
+        });
+    }
 
     render() {
         const { match: { params }} = this.props;
@@ -67,27 +88,24 @@ class JobDetailsContainer extends Component {
                             <Input.Group size="large" style={{ marginBottom: 16 }}>
                                 <Input defaultValue={job.hash} readOnly={true} addonBefore={<div style={{minWidth: "90px"}}>Hash</div>}/>
                             </Input.Group>
-                            <h2>Tasks</h2>
-                            <hr style={{marginBottom: '15px'}}/>
-                            <Table rowKey="name" 
-                                columns={[
-                                    {
-                                        title: 'Name',
-                                        dataIndex: 'name'
-                                    },
-                                    {
-                                        title: 'OnSuccess',
-                                        dataIndex: 'onSuccess'
-                                    },
-                                    {
-                                        title: 'OnFailure',
-                                        dataIndex: 'onFailure'
-                                    }
-                                ]} 
-                                dataSource={tasks} scroll={{x: true}}/>
                             <h2>Tasks Tree</h2>
                             <hr style={{marginBottom: '15px'}}/>
-                            <TaskTreeComponent entrypoint={job.entrypoint} tasks={job.tasks} isRoot={true}/>
+                            <TaskTreeComponent entrypoint={job.entrypoint} tasks={job.tasks} onSelect={(selectedKeys, info) => this.onTaskSelected(job.tasks, selectedKeys, info)}/>
+                            <div style={{marginTop: "12px"}}>
+                                <h2>Code viewer</h2>
+                                <CodeMirror 
+                                    value={formatCodeString(this.state.selectedTask ? this.state.selectedTask.script : "")}
+                                    autoFocus={true}
+                                    onChange={() => {}} 
+                                    options={
+                                        {
+                                            lineNumbers: true, 
+                                            mode: 'javascript',
+                                            readOnly: true
+                                        }
+                                    } 
+                                />
+                            </div>
                             <Button.Group style={{float: "right"}}>
                                 <Button type="primary" onClick={() => this.props.history.push('/jobs')}>
                                     <Icon type="left" />Back
@@ -101,6 +119,11 @@ class JobDetailsContainer extends Component {
         );
     }
 
+}
+
+function formatCodeString(code) {
+    if(!code || code.length === 0) return;
+    return code.split(";").join(';\n');
 }
 
 export default JobDetailsContainer;
