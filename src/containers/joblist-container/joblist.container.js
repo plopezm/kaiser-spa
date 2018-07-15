@@ -8,12 +8,9 @@ import { Table, Input, Icon, Spin, Alert, Menu, Dropdown } from 'antd';
 const GET_JOBS = gql`
     query jobQuery {
         jobs {
-            version
             name
             status
-            hash
             duration
-            entrypoint
         }
     }
 `;
@@ -131,21 +128,13 @@ class JobListContainer extends Component {
             sortOrder: sortedInfo.columnKey === 'status' && sortedInfo.order
           },
           {
-            title: 'Entrypoint',
-            dataIndex: 'entrypoint'
-          },
-          {
               title: 'Duration',
               dataIndex: 'duration'
           },
           {
-            title: 'Hash',
-            dataIndex: 'hash'
-          },
-          {
               title: 'Actions',
               fixed: 'right',
-              width: 90,
+              width: 85,
               render: (text, record, index) => {
                 return  (
                     <Dropdown overlay={this.generateMenu(record)} trigger={['click']}>
