@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Spin, Alert, Input, Button, Icon } from 'antd';
-import TextArea from '../../node_modules/antd/lib/input/TextArea';
+import { Spin, Alert, Input, Button, Icon, Table } from 'antd';
+import TaskTreeComponent from '../components/taskstree.component';
 
 const GET_JOB_BY_NAME = gql`
     query getJobById($jobName: String!) {
@@ -13,6 +13,13 @@ const GET_JOB_BY_NAME = gql`
             hash
             duration
             entrypoint
+            tasks {
+                name
+                script
+                scriptFile
+                onSuccess
+                onFailure
+            }
         }
     }
 `;
@@ -35,13 +42,18 @@ class JobDetailsContainer extends Component {
                     );
                     if (error) return `Error! ${error.message}`;
                     const job = data.getJobById;
+                    const tasks = [...job.tasks];
+                    tasks.sort((a, b) => {
+                        if (a.name > b.name) return 1;
+                        if (a.name < b.name) return -1;
+                        return 0;
+                    });
                     return (
                         <React.Fragment>
+                            <h1>{job.name}</h1>
+                            <hr style={{marginBottom: '15px'}}/>
                             <Input.Group size="large" style={{ marginBottom: 16 }}>
                                 <Input defaultValue={job.version} readOnly={true} addonBefore={<div style={{minWidth: "90px"}}>Version</div>}/>
-                            </Input.Group>
-                            <Input.Group size="large" style={{ marginBottom: 16 }}>
-                                <Input defaultValue={job.name} readOnly={true} addonBefore={<div style={{minWidth: "90px"}}>Name</div>}/>
                             </Input.Group>
                             <Input.Group size="large" style={{ marginBottom: 16 }}>
                                 <Input defaultValue={job.status} readOnly={true} addonBefore={<div style={{minWidth: "90px"}}>Status</div>}/>
@@ -55,6 +67,27 @@ class JobDetailsContainer extends Component {
                             <Input.Group size="large" style={{ marginBottom: 16 }}>
                                 <Input defaultValue={job.hash} readOnly={true} addonBefore={<div style={{minWidth: "90px"}}>Hash</div>}/>
                             </Input.Group>
+                            <h2>Tasks</h2>
+                            <hr style={{marginBottom: '15px'}}/>
+                            <Table rowKey="name" 
+                                columns={[
+                                    {
+                                        title: 'Name',
+                                        dataIndex: 'name'
+                                    },
+                                    {
+                                        title: 'OnSuccess',
+                                        dataIndex: 'onSuccess'
+                                    },
+                                    {
+                                        title: 'OnFailure',
+                                        dataIndex: 'onFailure'
+                                    }
+                                ]} 
+                                dataSource={tasks} scroll={{x: true}}/>
+                            <h2>Tasks Tree</h2>
+                            <hr style={{marginBottom: '15px'}}/>
+                            <TaskTreeComponent entrypoint={job.entrypoint} tasks={job.tasks} isRoot={true}/>
                             <Button.Group style={{float: "right"}}>
                                 <Button type="primary" onClick={() => this.props.history.push('/jobs')}>
                                     <Icon type="left" />Back

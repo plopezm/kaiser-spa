@@ -138,7 +138,7 @@ class JobListContainer extends Component {
               render: (text, record, index) => {
                 return  (
                     <Dropdown overlay={this.generateMenu(record)} trigger={['click']}>
-                        <a className="ant-btn" href="#">
+                        <a className="ant-btn">
                             <Icon type="bars" />
                         </a>
                     </Dropdown>
