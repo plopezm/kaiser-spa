@@ -21,7 +21,8 @@ const GET_JOB_BY_NAME = gql`
                 scriptFile
                 onSuccess
                 onFailure
-            }
+            },
+            log
         }
     }
 `;
@@ -91,7 +92,7 @@ class JobDetailsContainer extends Component {
                             <hr style={{marginBottom: '15px'}}/>
                             <TaskTreeComponent entrypoint={job.entrypoint} tasks={job.tasks} onSelect={(selectedKeys, info) => this.onTaskSelected(job.tasks, selectedKeys, info)}/>
                             <div style={{marginTop: "12px"}}>
-                                <h2>Code viewer</h2>
+                                <h3>Code viewer</h3>
                                 <CodeMirror 
                                     value={formatCodeString(this.state.selectedTask ? this.state.selectedTask.script : "")}
                                     autoFocus={true}
@@ -100,6 +101,20 @@ class JobDetailsContainer extends Component {
                                         {
                                             lineNumbers: true, 
                                             mode: 'javascript',
+                                            readOnly: true
+                                        }
+                                    } 
+                                />
+                            </div>
+                            <div style={{marginTop: "12px"}}>
+                                <h2>Output</h2>
+                                <hr style={{marginBottom: '15px'}}/>
+                                <CodeMirror 
+                                    value={job.log}
+                                    autoFocus={true}
+                                    onChange={() => {}} 
+                                    options={
+                                        {
                                             readOnly: true
                                         }
                                     } 
