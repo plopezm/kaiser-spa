@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Spin, Alert, Input, Button, Icon, Table } from 'antd';
+import { Spin, Alert, Input, Button, Icon } from 'antd';
 import TaskTreeComponent from '../components/taskstree.component';
 import {Controlled as CodeMirror} from 'react-codemirror2';
 require('codemirror/mode/javascript/javascript');
@@ -36,7 +36,6 @@ class JobDetailsContainer extends Component {
     }
 
     onTaskSelected = (jobTasks, selectedKeys, info) => {
-        console.log(jobTasks, selectedKeys[0]);
         jobTasks.forEach(element => {
             if (element.name === selectedKeys[0]) {
                 this.setState({

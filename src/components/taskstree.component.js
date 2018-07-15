@@ -7,10 +7,6 @@ const TaskTreeComponent = (props) => {
     const entrypoint = props.entrypoint;
     const taskMap = props.tasks.toHashMap('name');
 
-    const onSelect = (selectedKeys, info) => {
-        console.log('selected', selectedKeys, info);
-    };
-
     const renderNextNodes = (taskMap, currentTask, nodeName) => {
         if (!currentTask[nodeName]) {
             return "";
