@@ -13,7 +13,6 @@ class App extends Component {
           <Sider
             breakpoint="lg"
             collapsedWidth="0"
-            onCollapse={(collapsed, type) => { console.log(collapsed, type); }}
           >
             <div className="App-logo" />
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
