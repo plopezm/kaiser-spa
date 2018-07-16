@@ -28,6 +28,7 @@ const TaskTreeComponent = (props) => {
                 showLine
                 showIcon
                 defaultExpandAll
+                defaultSelectedKeys={[entrypoint]}
                 onSelect={props.onSelect}
             >
                 <TreeNode key={entrypoint} title={entrypoint} icon={<Icon type="login" />}>

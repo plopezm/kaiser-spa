@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Spin, Alert, Input, Button, Icon } from 'antd';
+import { Spin, Alert, Input, Button, Icon, Table } from 'antd';
 import TaskTreeComponent from '../components/taskstree.component';
 import {Controlled as CodeMirror} from 'react-codemirror2';
 require('codemirror/mode/javascript/javascript');
@@ -15,6 +15,10 @@ const GET_JOB_BY_NAME = gql`
             hash
             duration
             entrypoint
+            args {
+                name
+                value
+            }
             tasks {
                 name
                 script
@@ -32,7 +36,8 @@ class JobDetailsContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedTask: null
+            selectedTask: null,
+            dataReceived: false
         };
     }
 
@@ -50,7 +55,7 @@ class JobDetailsContainer extends Component {
     render() {
         const { match: { params }} = this.props;
         return ( 
-            <Query query={GET_JOB_BY_NAME} variables={{ jobName: params.jobId }} pollInterval={3000}>
+            <Query query={GET_JOB_BY_NAME} variables={{ jobName: params.jobId }} pollInterval={10000}>
                  {({ loading, error, data }) => {
                     if (loading) return (                        
                         <Spin tip="Loading...">
@@ -63,12 +68,7 @@ class JobDetailsContainer extends Component {
                     );
                     if (error) return `Error! ${error.message}`;
                     const job = data.getJobById;
-                    const tasks = [...job.tasks];
-                    tasks.sort((a, b) => {
-                        if (a.name > b.name) return 1;
-                        if (a.name < b.name) return -1;
-                        return 0;
-                    });
+                    const entryTask = job.tasks.filter(task => task.name === job.entrypoint)[0];
                     return (
                         <React.Fragment>
                             <h1>{job.name}</h1>
@@ -88,15 +88,27 @@ class JobDetailsContainer extends Component {
                             <Input.Group size="large" style={{ marginBottom: 16 }}>
                                 <Input defaultValue={job.hash} readOnly={true} addonBefore={<div style={{minWidth: "90px"}}>Hash</div>}/>
                             </Input.Group>
+                            <h2>Arguments</h2>
+                            <hr style={{marginBottom: '15px'}}/>
+                            <Table rowKey="name" 
+                                columns={[
+                                    {
+                                        title: 'Name',
+                                        dataIndex: 'name'
+                                   },
+                                    {
+                                        title: 'Value',
+                                        dataIndex: 'value'
+                                    }
+                                ]} 
+                                dataSource={job.args} scroll={{x: true}}/>
                             <h2>Tasks Tree</h2>
                             <hr style={{marginBottom: '15px'}}/>
                             <TaskTreeComponent entrypoint={job.entrypoint} tasks={job.tasks} onSelect={(selectedKeys, info) => this.onTaskSelected(job.tasks, selectedKeys, info)}/>
                             <div style={{marginTop: "12px"}}>
                                 <h3>Code viewer</h3>
                                 <CodeMirror 
-                                    value={formatCodeString(this.state.selectedTask ? this.state.selectedTask.script : "")}
-                                    autoFocus={true}
-                                    onChange={() => {}} 
+                                    value={formatCodeString(this.state.selectedTask ? this.state.selectedTask.script : entryTask.script)}
                                     options={
                                         {
                                             lineNumbers: true, 
@@ -107,7 +119,7 @@ class JobDetailsContainer extends Component {
                                 />
                             </div>
                             <div style={{marginTop: "12px"}}>
-                                <h2>Output (Last 150 lines)</h2>
+                                <h2>Output (Last 100 lines)</h2>
                                 <hr style={{marginBottom: '15px'}}/>
                                 <CodeMirror 
                                     value={job.log}
