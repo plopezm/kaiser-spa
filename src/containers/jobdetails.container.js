@@ -120,6 +120,7 @@ class JobDetailsContainer extends Component {
                                     } 
                                 />
                             </div>
+                            <hr style={{marginBottom: '15px'}}/>
                             <Button.Group style={{float: "right"}}>
                                 <Button type="primary" onClick={() => this.props.history.push('/jobs')}>
                                     <Icon type="left" />Back
