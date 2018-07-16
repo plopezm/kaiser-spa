@@ -107,7 +107,7 @@ class JobDetailsContainer extends Component {
                                 />
                             </div>
                             <div style={{marginTop: "12px"}}>
-                                <h2>Output</h2>
+                                <h2>Output (Last 150 lines)</h2>
                                 <hr style={{marginBottom: '15px'}}/>
                                 <CodeMirror 
                                     value={job.log}
