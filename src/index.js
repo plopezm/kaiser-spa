@@ -21,6 +21,7 @@ function isFunction(func){
         [{id:123, name:'naveen'}, {id:345, name:"kumar"}].toHashMap(function(obj){return obj.id+1})
         Returns :- Object {124: Object, 346: Object}
  */
+// eslint-disable-next-line
 Array.prototype.toHashMap = function(key){
     var _hashMap = {}, getKey = isFunction(key)?key: function(_obj){return _obj[key];};
     this.forEach(function (obj){

@@ -21,7 +21,7 @@ class HomeContainer extends Component {
                         <ImageCard onClick={() => this.props.history.push('/jobs')} image={<img alt="Job List" src="/images/icon-work-programs-03.png" />} title="My Jobs" desc="Manage your jobs" />
                     </Col>      
                     <Col>
-                        <ImageCard image={<WheelPlusIcon />} title="Create Job" desc="Create new jobs" />
+                        <ImageCard onClick={() => this.props.history.push('/createjob')} image={<WheelPlusIcon />} title="Create Job" desc="Create new jobs" />
                     </Col>
                 </Row>
             </React.Fragment>
