@@ -83,7 +83,7 @@ class CreateJobContainer extends Component {
                             dataIndex: 'onSuccess',
                             dataType: 'select',
                             selectOptions: [
-                                'one', 'two'
+                                'END'
                             ],
                             editable: true,
                         },
@@ -92,7 +92,7 @@ class CreateJobContainer extends Component {
                             dataIndex: 'onFailure',
                             dataType: 'select',
                             selectOptions: [
-                                'one', 'two'
+                                'END'
                             ],
                             editable: true,
                         },

@@ -34,9 +34,9 @@ class EditableCell extends React.Component {
     }
     if (this.props.inputType === 'select') {
       return (
-        <Select initialValue={this.props.inputDefaultValue || this.props.selectOptions[0]}>
+        <Select style={{ width: 90 }}>
           {
-            this.props.selectOptions.map(option => <Option key={option} value={option}>{option}</Option>) 
+            this.props.selectOptions.map(option => <Option key={option}>{option}</Option>) 
           }
         </Select>
       )
