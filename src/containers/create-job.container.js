@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Spin, Alert, Input, Button, Icon, Table } from 'antd';
 import {Controlled as CodeMirror} from 'react-codemirror2';
+import EditableTable from '../components/table/editable-table.component';
 require('codemirror/mode/javascript/javascript');
 
 class CreateJobContainer extends Component {
@@ -12,6 +13,12 @@ class CreateJobContainer extends Component {
         this.state = {
             args: []
         }
+    }
+
+    handleArgumentsTableUpdate = (argsTableData) => {
+        this.setState({
+            args: [...argsTableData]
+        });
     }
 
     render() {
@@ -30,22 +37,33 @@ class CreateJobContainer extends Component {
                 </Input.Group>
                 <h2>Arguments</h2>
                 <hr style={{marginBottom: '15px'}}/>
-                <Table rowKey="name" 
+                <EditableTable
+                    rowKey="name" 
                     columns={[
                         {
                             title: 'Name',
-                            dataIndex: 'name'
+                            dataIndex: 'name',
+                            editable: true,
                         },
                         {
                             title: 'Value',
-                            dataIndex: 'value'
+                            dataIndex: 'value',
+                            editable: true,
                         }
                     ]} 
-                    dataSource={this.state.args} scroll={{x: true}}/>
+                    dataSource={this.state.args}
+                    onTableUpdate={this.handleArgumentsTableUpdate}
+                    scroll={{x: true}}
+                />
+                <h2>Jobs</h2>
+                <hr style={{marginBottom: '15px'}}/>
                 <hr style={{marginBottom: '15px', visibility: 'hidden'}}/>
                 <Button.Group style={{float: "right"}}>
                     <Button type="primary" onClick={() => this.props.history.push('/')}>
                         <Icon type="left" />Back
+                    </Button>
+                    <Button type="primary" onClick={() => this.props.history.push('/')}>
+                        <Icon type="save" />Save
                     </Button>
                 </Button.Group>
                 <br style={{clear: "both"}} />
