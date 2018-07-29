@@ -11,13 +11,23 @@ class CreateJobContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            args: []
+            newJob: {
+                version: '1',
+                name: '',
+                entrypoint: '',
+                duration: '',
+                args: [],
+                tasks: []
+            }
         }
     }
 
-    handleArgumentsTableUpdate = (argsTableData) => {
+    handleTableUpdate = (key, update) => {
         this.setState({
-            args: [...argsTableData]
+            newJob: {
+                ...this.state.newJob,
+                [key]: [...update]
+            }
         });
     }
 
@@ -43,20 +53,60 @@ class CreateJobContainer extends Component {
                         {
                             title: 'Name',
                             dataIndex: 'name',
+                            dataType: 'text',
                             editable: true,
                         },
                         {
                             title: 'Value',
                             dataIndex: 'value',
+                            dataType: 'text',
                             editable: true,
                         }
                     ]} 
-                    dataSource={this.state.args}
-                    onTableUpdate={this.handleArgumentsTableUpdate}
+                    dataSource={this.state.newJob.args}
+                    onTableUpdate={(update) => this.handleTableUpdate('args', update)}
                     scroll={{x: true}}
                 />
                 <h2>Jobs</h2>
                 <hr style={{marginBottom: '15px'}}/>
+                <EditableTable
+                    rowKey="name" 
+                    columns={[
+                        {
+                            title: 'Name',
+                            dataIndex: 'name',
+                            dataType: 'text',
+                            editable: true,
+                        },
+                        {
+                            title: 'On Success',
+                            dataIndex: 'onSuccess',
+                            dataType: 'select',
+                            selectOptions: [
+                                'one', 'two'
+                            ],
+                            editable: true,
+                        },
+                        {
+                            title: 'On Failure',
+                            dataIndex: 'onFailure',
+                            dataType: 'select',
+                            selectOptions: [
+                                'one', 'two'
+                            ],
+                            editable: true,
+                        },
+                        {
+                            title: 'Script',
+                            dataIndex: 'script',
+                            dataType: 'script',
+                            editable: true
+                        }
+                    ]} 
+                    dataSource={this.state.newJob.tasks}
+                    onTableUpdate={(update) => this.handleTableUpdate('tasks', update)}
+                    scroll={{x: true}}
+                />
                 <hr style={{marginBottom: '15px', visibility: 'hidden'}}/>
                 <Button.Group style={{float: "right"}}>
                     <Button type="primary" onClick={() => this.props.history.push('/')}>

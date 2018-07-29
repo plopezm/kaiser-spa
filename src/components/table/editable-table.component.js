@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Input, InputNumber, Form, Icon } from 'antd';
+import { Table, Input, InputNumber, Form, Icon, Select } from 'antd';
 import './editable-table.css';
+
+const Option = Select.Option;
 
 const data = [];
 for (let i = 0; i < 5; i++) {
@@ -30,6 +32,15 @@ class EditableCell extends React.Component {
     if (this.props.inputType === 'number') {
       return <InputNumber />;
     }
+    if (this.props.inputType === 'select') {
+      return (
+        <Select initialValue={this.props.inputDefaultValue || this.props.selectOptions[0]}>
+          {
+            this.props.selectOptions.map(option => <Option key={option} value={option}>{option}</Option>) 
+          }
+        </Select>
+      )
+    }
     return <Input />;
   };
 
@@ -39,6 +50,7 @@ class EditableCell extends React.Component {
       dataIndex,
       title,
       inputType,
+      selectOptions,
       record,
       index,
       ...restProps
@@ -75,7 +87,7 @@ class EditableTable extends React.Component {
     this.columns = [
       ...this.props.columns,
       {
-        title: 'operation',
+        title: 'Actions',
         dataIndex: 'operation',
         render: (text, record) => {
           const editable = this.isEditing(record);
@@ -190,7 +202,8 @@ class EditableTable extends React.Component {
         ...col,
         onCell: record => ({
           record,
-          inputType: isNumber(record[col.dataIndex]) ? 'number' : 'text',
+          inputType: col.dataType,
+          selectOptions: col.selectOptions,
           dataIndex: col.dataIndex,
           title: col.title,
           editing: this.isEditing(record),
