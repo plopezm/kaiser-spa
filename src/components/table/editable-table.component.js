@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Input, InputNumber, Form, Icon, Select } from 'antd';
 import './editable-table.css';
+const { TextArea } = Input;
 
 const Option = Select.Option;
 
@@ -16,8 +17,6 @@ for (let i = 0; i < 5; i++) {
 }
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
-
-function isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); } 
 
 const EditableRow = ({ form, index, ...props }) => (
   <EditableContext.Provider value={form}>
@@ -39,6 +38,11 @@ class EditableCell extends React.Component {
             this.props.selectOptions.map(option => <Option key={option}>{option}</Option>) 
           }
         </Select>
+      )
+    }
+    if (this.props.inputType === 'script') {
+      return (
+        <TextArea rows={4} />
       )
     }
     return <Input />;
