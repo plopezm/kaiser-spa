@@ -35,7 +35,7 @@ class CreateJobContainer extends Component {
     render() {
         return (
             <React.Fragment>
-                <h1>Create new Job</h1>
+                <h1>New Job</h1>
                 <hr style={{marginBottom: '15px'}}/>
                 <Input.Group size="large" style={{ marginBottom: 16 }}>
                     <Input addonBefore={<div style={{minWidth: "90px"}}>Name</div>}/>
@@ -68,7 +68,7 @@ class CreateJobContainer extends Component {
                     onTableUpdate={(update) => this.handleTableUpdate('args', update)}
                     scroll={{x: true}}
                 />
-                <h2>Jobs</h2>
+                <h2>Tasks</h2>
                 <hr style={{marginBottom: '15px'}}/>
                 <EditableTable
                     rowKey="name" 

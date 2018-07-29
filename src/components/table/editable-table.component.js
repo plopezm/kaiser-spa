@@ -88,45 +88,16 @@ class EditableTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = { data: this.props.dataSource, editingKey: '', lastNewId: this.props.dataSource.length};
-    this.columns = [
-      ...this.props.columns,
-      {
-        title: 'Actions',
-        dataIndex: 'operation',
-        render: (text, record) => {
-          const editable = this.isEditing(record);
-          return (
-            <div>
-              {editable ? (
-                <span>
-                  <EditableContext.Consumer>
-                    {form => (
-                      <button
-                        onClick={() => this.save(form, record.key)}
-                      >
-                        <Icon type="save" />
-                      </button>
-                    )}
-                  </EditableContext.Consumer>
-                  <button onClick={() => this.cancel(record.key)}><Icon type="close" /></button>
-                </span>
-              ) : (
-                <React.Fragment>
-                  <button onClick={() => this.edit(record.key)}><Icon type="edit" /> </button>
-                  <button onClick={() => this.delete(record.key)}><Icon type="delete" /> </button>
-                </React.Fragment>
-              )}
-            </div>
-          );
-        },
-      },
-    ];
+    this.updateColumns(this.props.columns);
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
+    this.updateColumns(nextProps.columns);
+  }
+
+  updateColumns = (nextColumns) => {
     this.columns = [
-      ...nextProps.columns,
+      ...nextColumns,
       {
         title: 'Actions',
         dataIndex: 'operation',
