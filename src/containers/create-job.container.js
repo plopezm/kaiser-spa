@@ -23,6 +23,7 @@ class CreateJobContainer extends Component {
     }
 
     handleTableUpdate = (key, update) => {
+        console.log(this.state, key, update);
         this.setState({
             newJob: {
                 ...this.state.newJob,
@@ -83,6 +84,7 @@ class CreateJobContainer extends Component {
                             dataIndex: 'onSuccess',
                             dataType: 'select',
                             selectOptions: [
+                                ...this.state.newJob.tasks.map(task => task.name),
                                 'END'
                             ],
                             editable: true,
@@ -92,6 +94,7 @@ class CreateJobContainer extends Component {
                             dataIndex: 'onFailure',
                             dataType: 'select',
                             selectOptions: [
+                                ...this.state.newJob.tasks.map(task => task.name),
                                 'END'
                             ],
                             editable: true,

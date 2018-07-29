@@ -35,7 +35,7 @@ class EditableCell extends React.Component {
       return (
         <Select style={{ width: 90 }}>
           {
-            this.props.selectOptions.map(option => <Option key={option}>{option}</Option>) 
+            this.props.selectOptions.filter(option => option !== '').map(option => <Option key={option}>{option}</Option>) 
           }
         </Select>
       )
@@ -90,6 +90,43 @@ class EditableTable extends React.Component {
     this.state = { data: this.props.dataSource, editingKey: '', lastNewId: this.props.dataSource.length};
     this.columns = [
       ...this.props.columns,
+      {
+        title: 'Actions',
+        dataIndex: 'operation',
+        render: (text, record) => {
+          const editable = this.isEditing(record);
+          return (
+            <div>
+              {editable ? (
+                <span>
+                  <EditableContext.Consumer>
+                    {form => (
+                      <button
+                        onClick={() => this.save(form, record.key)}
+                      >
+                        <Icon type="save" />
+                      </button>
+                    )}
+                  </EditableContext.Consumer>
+                  <button onClick={() => this.cancel(record.key)}><Icon type="close" /></button>
+                </span>
+              ) : (
+                <React.Fragment>
+                  <button onClick={() => this.edit(record.key)}><Icon type="edit" /> </button>
+                  <button onClick={() => this.delete(record.key)}><Icon type="delete" /> </button>
+                </React.Fragment>
+              )}
+            </div>
+          );
+        },
+      },
+    ];
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    this.columns = [
+      ...nextProps.columns,
       {
         title: 'Actions',
         dataIndex: 'operation',
