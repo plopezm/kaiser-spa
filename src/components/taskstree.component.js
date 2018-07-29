@@ -8,7 +8,7 @@ const TaskTreeComponent = (props) => {
     const taskMap = props.tasks.toHashMap('name');
 
     const renderNextNodes = (taskMap, currentTask, nodeName) => {
-        if (!currentTask[nodeName]) {
+        if (!currentTask || !currentTask[nodeName]) {
             return "";
         }
         const nextTaskName = currentTask[nodeName];

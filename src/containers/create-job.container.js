@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Spin, Alert, Input, Button, Icon, Table } from 'antd';
-import {Controlled as CodeMirror} from 'react-codemirror2';
+import { Input, Button, Icon } from 'antd';
 import EditableTable from '../components/table/editable-table.component';
-require('codemirror/mode/javascript/javascript');
+import TaskTreeComponent from '../components/taskstree.component';
 
 class CreateJobContainer extends Component {
 
@@ -22,8 +21,7 @@ class CreateJobContainer extends Component {
         }
     }
 
-    handleTableUpdate = (key, update) => {
-        console.log(this.state, key, update);
+    handleJobUpdate = (key, update) => {
         this.setState({
             newJob: {
                 ...this.state.newJob,
@@ -38,13 +36,13 @@ class CreateJobContainer extends Component {
                 <h1>New Job</h1>
                 <hr style={{marginBottom: '15px'}}/>
                 <Input.Group size="large" style={{ marginBottom: 16 }}>
-                    <Input addonBefore={<div style={{minWidth: "90px"}}>Name</div>}/>
+                    <Input name='name' onChange={(e) => this.handleJobUpdate(e.target.name, e.target.value)} addonBefore={<div style={{minWidth: "90px"}} >Name</div>}/>
                 </Input.Group>
                 <Input.Group size="large" style={{ marginBottom: 16 }}>
-                    <Input addonBefore={<div style={{minWidth: "90px"}}>Entrypoint</div>}/>
+                    <Input name='entrypoint' onChange={(e) => this.handleJobUpdate(e.target.name, e.target.value)} addonBefore={<div style={{minWidth: "90px"}} >Entrypoint</div>}/>
                 </Input.Group>
                 <Input.Group size="large" style={{ marginBottom: 16 }}>
-                    <Input addonBefore={<div style={{minWidth: "90px"}}>Duration</div>}/>
+                    <Input name='duration' onChange={(e) => this.handleJobUpdate(e.target.name, e.target.value)} addonBefore={<div style={{minWidth: "90px"}}>Duration</div>}/>
                 </Input.Group>
                 <h2>Arguments</h2>
                 <hr style={{marginBottom: '15px'}}/>
@@ -65,7 +63,7 @@ class CreateJobContainer extends Component {
                         }
                     ]} 
                     dataSource={this.state.newJob.args}
-                    onTableUpdate={(update) => this.handleTableUpdate('args', update)}
+                    onTableUpdate={(update) => this.handleJobUpdate('args', update)}
                     scroll={{x: true}}
                 />
                 <h2>Tasks</h2>
@@ -107,9 +105,12 @@ class CreateJobContainer extends Component {
                         }
                     ]} 
                     dataSource={this.state.newJob.tasks}
-                    onTableUpdate={(update) => this.handleTableUpdate('tasks', update)}
+                    onTableUpdate={(update) => this.handleJobUpdate('tasks', update)}
                     scroll={{x: true}}
                 />
+                <h2>Tasks Tree</h2>
+                <hr style={{marginBottom: '15px'}}/>
+                <TaskTreeComponent entrypoint={this.state.newJob.entrypoint} tasks={this.state.newJob.tasks}/>
                 <hr style={{marginBottom: '15px', visibility: 'hidden'}}/>
                 <Button.Group style={{float: "right"}}>
                     <Button type="primary" onClick={() => this.props.history.push('/')}>
