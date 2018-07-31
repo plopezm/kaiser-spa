@@ -43,7 +43,7 @@ class JobDetailsContainer extends Component {
 
     onTaskSelected = (jobTasks, selectedKeys, info) => {
         jobTasks.forEach(element => {
-            if (element.name === selectedKeys[0]) {
+            if (element.name === selectedKeys[0].split('#')[0]) {
                 this.setState({
                     selectedTask: element
                 });

@@ -12,8 +12,9 @@ const TaskTreeComponent = (props) => {
             return "";
         }
         const nextTaskName = currentTask[nodeName];
+        const key = nodeName === 'onSuccess' ? nextTaskName+'#'+1 : nextTaskName+'#'+2;
         return (
-                <TreeNode key={nextTaskName} title={nextTaskName} icon={<Icon type={nodeName === 'onSuccess' ? 'check-circle-o' : 'close-circle' } />} >
+                <TreeNode key={key} title={nextTaskName} icon={<Icon type={nodeName === 'onSuccess' ? 'check-circle-o' : 'close-circle' } />} >
                     {renderNextNodes(taskMap, taskMap[nextTaskName], 'onSuccess')}
                     {renderNextNodes(taskMap, taskMap[nextTaskName], 'onFailure')}
                 </TreeNode>
