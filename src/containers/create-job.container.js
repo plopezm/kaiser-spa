@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Input, Button, Icon } from 'antd';
+import { Input, Button, Icon, Select } from 'antd';
 import EditableTable from '../components/table/editable-table.component';
-import TaskTreeComponent from '../components/taskstree.component';
+
+const Option = Select.Option;
 
 class CreateJobContainer extends Component {
 
@@ -39,7 +40,18 @@ class CreateJobContainer extends Component {
                     <Input name='name' onChange={(e) => this.handleJobUpdate(e.target.name, e.target.value)} addonBefore={<div style={{minWidth: "90px"}} >Name</div>}/>
                 </Input.Group>
                 <Input.Group size="large" style={{ marginBottom: 16 }}>
-                    <Input name='entrypoint' onChange={(e) => this.handleJobUpdate(e.target.name, e.target.value)} addonBefore={<div style={{minWidth: "90px"}} >Entrypoint</div>}/>
+                    <span className="ant-input-group-wrapper">
+                        <span className="ant-input-wrapper ant-input-group">
+                            <span className="ant-input-group-addon">
+                                <div style={{minWidth: "90px"}} >Entrypoint</div>
+                            </span>
+                            <Select name="entrypoint" style={{ width: '100%' }} onChange={(value) => this.handleJobUpdate('entrypoint', value)}>
+                            {
+                                this.state.newJob.tasks.filter(task => task.name !== '').map(task => <Option key={task.name}>{task.name}</Option>) 
+                            }
+                            </Select>
+                        </span>
+                    </span>
                 </Input.Group>
                 <Input.Group size="large" style={{ marginBottom: 16 }}>
                     <Input name='duration' onChange={(e) => this.handleJobUpdate(e.target.name, e.target.value)} addonBefore={<div style={{minWidth: "90px"}}>Duration</div>}/>
@@ -108,9 +120,6 @@ class CreateJobContainer extends Component {
                     onTableUpdate={(update) => this.handleJobUpdate('tasks', update)}
                     scroll={{x: true}}
                 />
-                <h2>Tasks Tree</h2>
-                <hr style={{marginBottom: '15px'}}/>
-                <TaskTreeComponent entrypoint={this.state.newJob.entrypoint} tasks={this.state.newJob.tasks}/>
                 <hr style={{marginBottom: '15px', visibility: 'hidden'}}/>
                 <Button.Group style={{float: "right"}}>
                     <Button type="primary" onClick={() => this.props.history.push('/')}>
