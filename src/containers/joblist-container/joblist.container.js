@@ -78,7 +78,10 @@ class JobListContainer extends Component {
         return (
             <Menu>
                 <Menu.Item key="0">
-                    <Link to={`/jobs/${record.name}`}><Icon type="eye" /> Show details</Link>
+                    <Link to={`/jobs/${record.name}`}><Icon type="eye" />  Details</Link>
+                </Menu.Item>
+                <Menu.Item key="1" disabled={record.activation.type === 'local'}>
+                    <Icon type="caret-right"/> Run
                 </Menu.Item>
             </Menu>
         ); 
@@ -134,7 +137,7 @@ class JobListContainer extends Component {
             sortOrder: sortedInfo.columnKey === 'status' && sortedInfo.order
           },
           {
-              title: 'Type',
+              title: 'Activation',
               dataIndex: 'activation.type'
           },
           {
