@@ -10,7 +10,13 @@ const GET_JOBS = gql`
         jobs {
             name
             status
-            duration
+            activation {
+                type
+                duration
+                args {
+                    name
+                }
+            }
         }
     }
 `;
@@ -128,8 +134,12 @@ class JobListContainer extends Component {
             sortOrder: sortedInfo.columnKey === 'status' && sortedInfo.order
           },
           {
+              title: 'Type',
+              dataIndex: 'activation.type'
+          },
+          {
               title: 'Duration',
-              dataIndex: 'duration'
+              dataIndex: 'activation.duration'
           },
           {
               title: 'Actions',

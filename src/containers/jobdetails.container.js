@@ -13,7 +13,13 @@ const GET_JOB_BY_NAME = gql`
             name
             status
             hash
-            duration
+            activation {
+                type
+                duration
+                args {
+                    name
+                }
+            } 
             entrypoint
             args {
                 name
@@ -83,7 +89,7 @@ class JobDetailsContainer extends Component {
                                 <Input defaultValue={job.entrypoint} readOnly={true} addonBefore={<div style={{minWidth: "90px"}}>Entrypoint</div>}/>
                             </Input.Group>
                             <Input.Group size="large" style={{ marginBottom: 16 }}>
-                                <Input defaultValue={job.duration} readOnly={true} addonBefore={<div style={{minWidth: "90px"}}>Duration</div>}/>
+                                <Input defaultValue={job.activation.duration} readOnly={true} addonBefore={<div style={{minWidth: "90px"}}>Duration</div>}/>
                             </Input.Group>
                             <Input.Group size="large" style={{ marginBottom: 16 }}>
                                 <Input defaultValue={job.hash} readOnly={true} addonBefore={<div style={{minWidth: "90px"}}>Hash</div>}/>
