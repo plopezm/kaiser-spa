@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { Input, Button, Icon, Select } from 'antd';
+import { Input, Button, Icon } from 'antd';
 import EditableTable from '../components/table/editable-table.component';
+import SelectComponent from '../components/form/select.component';
 
-const Option = Select.Option;
 const CREATE_JOB = gql`
     mutation jobMutation($job: CreateJobType!) {
         createJob(input: $job) {
@@ -22,7 +22,11 @@ class CreateJobContainer extends Component {
                 version: '1',
                 name: '',
                 entrypoint: '',
-                duration: '',
+                activation: {
+                    type: '',
+                    duration: '',
+                    args: []
+                },
                 args: [],
                 tasks: []
             }
@@ -34,6 +38,18 @@ class CreateJobContainer extends Component {
             newJob: {
                 ...this.state.newJob,
                 [key]: Array.isArray(update) ? [...update] : update
+            }
+        });
+    }
+
+    handleActivationUpdate = (key, update) => {
+        this.setState({
+            newJob: {
+                ...this.state.newJob,
+                activation: {
+                    ...this.state.newJob.activation,
+                    [key]: Array.isArray(update) ? [...update] : update
+                }
             }
         });
     }
@@ -69,23 +85,33 @@ class CreateJobContainer extends Component {
                             <Input name='name' onChange={(e) => this.handleJobUpdate(e.target.name, e.target.value)} addonBefore={<div style={{minWidth: "90px"}} >Name</div>}/>
                         </Input.Group>
                         <Input.Group size="large" style={{ marginBottom: 16 }}>
-                            <span className="ant-input-group-wrapper">
-                                <span className="ant-input-wrapper ant-input-group">
-                                    <span className="ant-input-group-addon">
-                                        <div style={{minWidth: "90px"}} >Entrypoint</div>
-                                    </span>
-                                    <Select name="entrypoint" style={{ width: '100%' }} onChange={(value) => this.handleJobUpdate('entrypoint', value)}>
-                                    {
-                                        this.state.newJob.tasks.filter(task => task.name !== '').map(task => <Option key={task.name}>{task.name}</Option>) 
-                                    }
-                                    </Select>
-                                </span>
-                            </span>
+                            <SelectComponent label="Entrypoint" dataIndex="name" data={this.state.newJob.tasks.filter(task => task.name !== '')} onChange={(value) => this.handleJobUpdate('entrypoint', value)} />
+                        </Input.Group>
+                        <h1>Activation</h1>
+                        <hr style={{marginBottom: '15px'}}/>
+                        <Input.Group size="large" style={{ marginBottom: 16 }}>
+                            <SelectComponent label="Type" data={['local', 'remote']} onChange={(value) => this.handleActivationUpdate('type', value)} />
                         </Input.Group>
                         <Input.Group size="large" style={{ marginBottom: 16 }}>
-                            <Input name='duration' onChange={(e) => this.handleJobUpdate(e.target.name, e.target.value)} addonBefore={<div style={{minWidth: "90px"}}>Duration</div>}/>
+                            <Input name='duration' onChange={(e) => this.handleActivationUpdate(e.target.name, e.target.value)} addonBefore={<div style={{minWidth: "90px"}}>Duration</div>}/>
                         </Input.Group>
-                        <h2>Arguments</h2>
+                        <h2>Remote Arguments</h2>
+                        <hr style={{marginBottom: '15px'}}/>
+                        <EditableTable
+                            rowKey="name" 
+                            columns={[
+                                {
+                                    title: 'Name',
+                                    dataIndex: 'name',
+                                    dataType: 'text',
+                                    editable: true,
+                                }
+                            ]} 
+                            dataSource={this.state.newJob.activation.args}
+                            onTableUpdate={(update) => this.handleActivationUpdate('args', update)}
+                            scroll={{x: true}}
+                        />
+                        <h2>Constants</h2>
                         <hr style={{marginBottom: '15px'}}/>
                         <EditableTable
                             rowKey="name" 
@@ -107,7 +133,7 @@ class CreateJobContainer extends Component {
                             onTableUpdate={(update) => this.handleJobUpdate('args', update)}
                             scroll={{x: true}}
                         />
-                        <h2>Tasks</h2>
+                        <h1>Tasks</h1>
                         <hr style={{marginBottom: '15px'}}/>
                         <EditableTable
                             rowKey="name" 
