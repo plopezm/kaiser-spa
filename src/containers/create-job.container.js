@@ -4,6 +4,7 @@ import { Mutation } from 'react-apollo';
 import { Input, Button, Icon } from 'antd';
 import EditableTable from '../components/table/editable-table.component';
 import SelectComponent from '../components/form/select.component';
+import JobActivationForm from '../components/job-activation-form.component';
 
 const CREATE_JOB = gql`
     mutation jobMutation($job: CreateJobType!) {
@@ -79,7 +80,7 @@ class CreateJobContainer extends Component {
             <Mutation mutation={CREATE_JOB}>
                 {(createJob, { data }) => (
                     <React.Fragment>
-                        <h1>New Job</h1>
+                        <h2>Job Details</h2>
                         <hr style={{marginBottom: '15px'}}/>
                         <Input.Group size="large" style={{ marginBottom: 16 }}>
                             <Input name='name' onChange={(e) => this.handleJobUpdate(e.target.name, e.target.value)} addonBefore={<div style={{minWidth: "90px"}} >Name</div>}/>
@@ -87,31 +88,7 @@ class CreateJobContainer extends Component {
                         <Input.Group size="large" style={{ marginBottom: 16 }}>
                             <SelectComponent label="Entrypoint" dataIndex="name" data={this.state.newJob.tasks.filter(task => task.name !== '')} onChange={(value) => this.handleJobUpdate('entrypoint', value)} />
                         </Input.Group>
-                        <h1>Activation</h1>
-                        <hr style={{marginBottom: '15px'}}/>
-                        <Input.Group size="large" style={{ marginBottom: 16 }}>
-                            <SelectComponent label="Type" data={['local', 'remote']} onChange={(value) => this.handleActivationUpdate('type', value)} />
-                        </Input.Group>
-                        <Input.Group size="large" style={{ marginBottom: 16 }}>
-                            <Input name='duration' onChange={(e) => this.handleActivationUpdate(e.target.name, e.target.value)} addonBefore={<div style={{minWidth: "90px"}}>Duration</div>}/>
-                        </Input.Group>
-                        <h2>Remote Arguments</h2>
-                        <hr style={{marginBottom: '15px'}}/>
-                        <EditableTable
-                            rowKey="name" 
-                            columns={[
-                                {
-                                    title: 'Name',
-                                    dataIndex: 'name',
-                                    dataType: 'text',
-                                    editable: true,
-                                }
-                            ]} 
-                            dataSource={this.state.newJob.activation.args}
-                            onTableUpdate={(update) => this.handleActivationUpdate('args', update)}
-                            scroll={{x: true}}
-                        />
-                        <h2>Constants</h2>
+                        <h2 style={{marginTop: "15px"}}>Constants</h2>
                         <hr style={{marginBottom: '15px'}}/>
                         <EditableTable
                             rowKey="name" 
@@ -133,7 +110,11 @@ class CreateJobContainer extends Component {
                             onTableUpdate={(update) => this.handleJobUpdate('args', update)}
                             scroll={{x: true}}
                         />
-                        <h1>Tasks</h1>
+                        <h2 style={{marginTop: "15px"}}>Activation</h2>
+                        <hr style={{marginBottom: '15px'}}/>
+                        <JobActivationForm activation={this.state.newJob.activation} onChange={this.handleActivationUpdate}/>
+                        
+                        <h2 style={{marginTop: "15px"}}>Tasks</h2>
                         <hr style={{marginBottom: '15px'}}/>
                         <EditableTable
                             rowKey="name" 
