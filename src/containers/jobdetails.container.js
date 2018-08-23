@@ -16,12 +16,9 @@ const GET_JOB_BY_NAME = gql`
             activation {
                 type
                 duration
-                args {
-                    name
-                }
             } 
             entrypoint
-            args {
+            params {
                 name
                 value
             }
@@ -94,7 +91,7 @@ class JobDetailsContainer extends Component {
                             <Input.Group size="large" style={{ marginBottom: 16 }}>
                                 <Input defaultValue={job.hash} readOnly={true} addonBefore={<div style={{minWidth: "90px"}}>Hash</div>}/>
                             </Input.Group>
-                            <h2>Arguments</h2>
+                            <h2>Parameters</h2>
                             <hr style={{marginBottom: '15px'}}/>
                             <Table rowKey="name" 
                                 columns={[
@@ -103,11 +100,11 @@ class JobDetailsContainer extends Component {
                                         dataIndex: 'name'
                                    },
                                     {
-                                        title: 'Value',
+                                        title: 'Default value',
                                         dataIndex: 'value'
                                     }
                                 ]} 
-                                dataSource={job.args} scroll={{x: true}}/>
+                                dataSource={job.params} scroll={{x: true}}/>
                             <h2>Tasks Tree</h2>
                             <hr style={{marginBottom: '15px'}}/>
                             <TaskTreeComponent entrypoint={job.entrypoint} tasks={job.tasks} onSelect={(selectedKeys, info) => this.onTaskSelected(job.tasks, selectedKeys, info)}/>

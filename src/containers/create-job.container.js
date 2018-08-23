@@ -23,12 +23,11 @@ class CreateJobContainer extends Component {
                 version: '1',
                 name: '',
                 entrypoint: '',
+                params: [],
                 activation: {
                     type: '',
-                    duration: '',
-                    args: []
+                    duration: ''
                 },
-                args: [],
                 tasks: []
             }
         }
@@ -57,7 +56,7 @@ class CreateJobContainer extends Component {
 
     onSubmit = (createJob) => {
         const newJob = Object.assign({}, this.state.newJob, {
-            args: this.state.newJob.args.map(arg => {
+            params: this.state.newJob.params.map(arg => {
                 return {
                     name: arg.name,
                     value: arg.value
@@ -88,7 +87,10 @@ class CreateJobContainer extends Component {
                         <Input.Group size="large" style={{ marginBottom: 16 }}>
                             <SelectComponent label="Entrypoint" dataIndex="name" data={this.state.newJob.tasks.filter(task => task.name !== '')} onChange={(value) => this.handleJobUpdate('entrypoint', value)} />
                         </Input.Group>
-                        <h2 style={{marginTop: "15px"}}>Constants</h2>
+                        <h2 style={{marginTop: "15px"}}>Activation</h2>
+                        <hr style={{marginBottom: '15px'}}/>
+                        <JobActivationForm activation={this.state.newJob.activation} onChange={this.handleActivationUpdate}/>
+                        <h2 style={{marginTop: "15px"}}>Parameters</h2>
                         <hr style={{marginBottom: '15px'}}/>
                         <EditableTable
                             rowKey="name" 
@@ -100,20 +102,16 @@ class CreateJobContainer extends Component {
                                     editable: true,
                                 },
                                 {
-                                    title: 'Value',
+                                    title: 'Default value',
                                     dataIndex: 'value',
                                     dataType: 'text',
                                     editable: true,
                                 }
                             ]} 
-                            dataSource={this.state.newJob.args}
-                            onTableUpdate={(update) => this.handleJobUpdate('args', update)}
+                            dataSource={this.state.newJob.params}
+                            onTableUpdate={(update) => this.handleJobUpdate('params', update)}
                             scroll={{x: true}}
                         />
-                        <h2 style={{marginTop: "15px"}}>Activation</h2>
-                        <hr style={{marginBottom: '15px'}}/>
-                        <JobActivationForm activation={this.state.newJob.activation} onChange={this.handleActivationUpdate}/>
-                        
                         <h2 style={{marginTop: "15px"}}>Tasks</h2>
                         <hr style={{marginBottom: '15px'}}/>
                         <EditableTable

@@ -13,9 +13,6 @@ const GET_JOBS = gql`
             activation {
                 type
                 duration
-                args {
-                    name
-                }
             }
         }
     }
